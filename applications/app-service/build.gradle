@@ -1,0 +1,43 @@
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+	implementation project(':jwt')
+	implementation project(':message-translator')
+    implementation project(':reactive-web')
+    implementation 'org.reactivecommons.utils:object-mapper:0.1.0'
+    implementation project(':r2dbc-postgresql')
+    implementation project(':model')
+    implementation project(':usecase')
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'  // <-- AÑADIDO
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc' // <-- AÑADIDO si usas R2DBC
+
+    // Security extra (para que compile SecurityConfig)
+    implementation 'org.springframework.security:spring-security-web'
+    implementation 'org.springframework.security:spring-security-config'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+    testImplementation 'com.tngtech.archunit:archunit:1.4.1'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind'
+}
+
+tasks.register('explodedJar', Copy) {
+    with jar
+    into layout.buildDirectory.dir("exploded")
+}
+
+jar {
+    // To disable the *-plain.jar
+    enabled = false
+}
+
+bootJar {
+    // Sets output jar name
+    archiveFileName = "${project.getParent().getName()}.${archiveExtension.get()}"
+}
