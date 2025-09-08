@@ -3,6 +3,7 @@ package co.com.pragma.api.controller;
 import co.com.pragma.api.dto.request.LoanPetitionRequestDto;
 import co.com.pragma.api.dto.response.LoanPetitionResponseDto;
 import co.com.pragma.api.mapper.LoanPetitionWebMapper;
+import co.com.pragma.jwt.JwtValidator;
 import co.com.pragma.usecase.loanpetition.LoanPetitionUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,6 +29,7 @@ public class LoanPetitionController {
 
     private final LoanPetitionUseCase loanPetitionUseCase;
     private final LoanPetitionWebMapper loanPetitionWebMapper;
+    private final JwtValidator jwtValidator;
 
     @Operation(summary = "Create a new loan petition",
             responses = {
@@ -38,10 +40,26 @@ public class LoanPetitionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<LoanPetitionResponseDto> createLoanPetition(
-            @Valid @RequestBody LoanPetitionRequestDto dto) {
-        return loanPetitionUseCase.createLoanPetition(loanPetitionWebMapper.toDomain(dto))
-                .map(loanPetitionWebMapper::toResponse);
+            @Valid @RequestBody LoanPetitionRequestDto dto,
+            @RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replace("Bearer ", "");
+
+        return jwtValidator.validateToken(token)
+                .flatMap(claims -> {
+                    String role = claims.get("role", String.class);
+                    String documentIdFromToken = claims.get("documentId", String.class);
+
+                    dto.setDocumentId(documentIdFromToken);
+
+                    return loanPetitionUseCase.createLoanPetition(
+                            loanPetitionWebMapper.toDomain(dto),
+                            documentIdFromToken,
+                            role// <--- segundo argumento requerido
+                    ).map(loanPetitionWebMapper::toResponse);
+                });
     }
+
 
     @Operation(summary = "Find loan petition by ID",
             responses = {

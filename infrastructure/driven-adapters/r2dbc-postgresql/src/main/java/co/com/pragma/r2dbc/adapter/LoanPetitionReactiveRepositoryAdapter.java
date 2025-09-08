@@ -2,14 +2,20 @@ package co.com.pragma.r2dbc.adapter;
 
 import co.com.pragma.model.loanpetition.LoanPetition;
 import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
+import co.com.pragma.model.userinfo.UserInfo;
+import co.com.pragma.model.userinfo.gateways.UserInfoRepository;
 import co.com.pragma.r2dbc.LoanPetitionReactiveRepository;
+import co.com.pragma.r2dbc.UserInfoReactiveRepository;
 import co.com.pragma.r2dbc.mapper.LoanPetitionEntityMapper;
+import co.com.pragma.r2dbc.mapper.UserInfoEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.UUID;
 
 @Component
@@ -17,8 +23,10 @@ import java.util.UUID;
 public class LoanPetitionReactiveRepositoryAdapter implements LoanPetitionRepository {
 
     private final LoanPetitionReactiveRepository repository;
+    private final UserInfoReactiveRepository userInfoRepository;
     private final TransactionalOperator transactionalOperator;
     private final LoanPetitionEntityMapper loanPetitionEntityMapper;
+    private final UserInfoEntityMapper userInfoEntityMapper;
 
     @Override
     public Mono<LoanPetition> save(LoanPetition loanPetition) {
@@ -44,4 +52,27 @@ public class LoanPetitionReactiveRepositoryAdapter implements LoanPetitionReposi
     public Mono<Void> deleteById(UUID id) {
         return repository.deleteById(id);
     }
+
+    @Override
+    public Flux<LoanPetition> findByStateIds(Collection<Integer> stateIds) {
+        return repository.findByStateIdIn(stateIds)
+                .map(loanPetitionEntityMapper::toDomain);
+    }
+
+    @Override
+    public Flux<UserInfo> findByDocumentId(String documentId) {
+        return userInfoRepository.findByDocumentId(documentId) // Flux<UserInfoEntity>
+                .map(userInfoEntityMapper::toDomain);// Flux<UserInfo>
+    }
+
+    @Override
+    public Flux<LoanPetition> findPetitionsByDocumentId(String documentId) {
+        // Aquí usamos tu repository reactivo que devuelve LoanPetitionEntity
+        return repository
+                .findByDocumentId(documentId) // devuelve Flux<LoanPetitionEntity> o Mono<LoanPetitionEntity>
+                .map(loanPetitionEntityMapper::toDomain); // mapear a tu modelo de dominio LoanPetition
+    }
+
+
+
 }

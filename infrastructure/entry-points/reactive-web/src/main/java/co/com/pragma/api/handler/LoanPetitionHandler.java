@@ -3,6 +3,7 @@ package co.com.pragma.api.handler;
 import co.com.pragma.api.dto.request.LoanPetitionRequestDto;
 import co.com.pragma.api.dto.response.LoanPetitionResponseDto;
 import co.com.pragma.api.mapper.LoanPetitionWebMapper;
+import co.com.pragma.jwt.JwtValidator;
 import co.com.pragma.usecase.common.messages.BusinessException;
 import co.com.pragma.usecase.common.messages.MessageCode;
 import co.com.pragma.usecase.loanpetition.LoanPetitionUseCase;
@@ -23,17 +24,35 @@ public class LoanPetitionHandler {
 
     private final LoanPetitionUseCase loanPetitionUseCase;
     private final LoanPetitionWebMapper mapper;
+    private final JwtValidator jwtValidator;
 
     // Crear una solicitud de préstamo
     public Mono<ServerResponse> createLoanPetition(ServerRequest request) {
-        return request.bodyToMono(LoanPetitionRequestDto.class)
-                .switchIfEmpty(Mono.error(new BusinessException(MessageCode.REQUEST_BODY_EMPTY, new Object[]{})))
-                .flatMap(dto -> loanPetitionUseCase.createLoanPetition(mapper.toDomain(dto)))
-                .map(mapper::toResponse)
-                .flatMap(response -> ServerResponse
-                        .created(URI.create("/api/v1/loan-petitions/" + response.getId()))
-                        .contentType(APPLICATION_JSON)
-                        .bodyValue(response));
+
+        String authHeader = request.headers().firstHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return Mono.error(new BusinessException(MessageCode.USER_NOT_AUTHORIZED, new Object[]{}));
+        }
+        String token = authHeader.substring(7);
+
+        return jwtValidator.validateToken(token)
+                .flatMap(claims -> {
+                    String tokenDocumentId = claims.get("documentId", String.class);
+                    String tokenRole = claims.get("role", String.class);
+
+                    return request.bodyToMono(LoanPetitionRequestDto.class)
+                            .switchIfEmpty(Mono.error(new BusinessException(MessageCode.REQUEST_BODY_EMPTY, new Object[]{})))
+                            .flatMap(dto -> loanPetitionUseCase.createLoanPetition(
+                                    mapper.toDomain(dto),
+                                    tokenDocumentId,
+                                    tokenRole
+                            ))
+                            .map(mapper::toResponse)
+                            .flatMap(response -> ServerResponse
+                                    .created(URI.create("/api/v1/loan-petitions/" + response.getId()))
+                                    .contentType(APPLICATION_JSON)
+                                    .bodyValue(response));
+                });
     }
 
     // Obtener solicitud por id

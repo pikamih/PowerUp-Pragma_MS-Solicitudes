@@ -3,6 +3,8 @@ package co.com.pragma.config;
 import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
 import co.com.pragma.model.loantype.gateways.LoanTypeRepository;
 import co.com.pragma.model.state.gateways.StateRepository;
+import co.com.pragma.model.userinfo.gateways.UserInfoRepository;
+import co.com.pragma.usecase.loanpetition.ListLoanReviewsUseCase;
 import co.com.pragma.usecase.loanpetition.LoanPetitionUseCase;
 import co.com.pragma.usecase.loantype.LoanTypeUseCase;
 import co.com.pragma.usecase.state.StateUseCase;
@@ -24,11 +26,13 @@ public class UseCasesConfig {
         private final StateRepository stateRepository;
         private final LoanTypeRepository loanTypeRepository;
         private final LoanPetitionRepository loanPetitionRepository;
+        private final UserInfoRepository userInfoRepository;
 
-    public UseCasesConfig(StateRepository stateRepository, LoanTypeRepository loanTypeRepository, LoanPetitionRepository loanPetitionRepository) {
+    public UseCasesConfig(StateRepository stateRepository, LoanTypeRepository loanTypeRepository, LoanPetitionRepository loanPetitionRepository, UserInfoRepository userInfoRepository) {
         this.stateRepository = stateRepository;
         this.loanTypeRepository = loanTypeRepository;
         this.loanPetitionRepository = loanPetitionRepository;
+        this.userInfoRepository = userInfoRepository;
     }
 
 
@@ -45,5 +49,10 @@ public class UseCasesConfig {
     @Bean
     public LoanPetitionUseCase loanPetitionUseCase(){
         return new LoanPetitionUseCase(loanPetitionRepository, loanTypeRepository, stateRepository);
+    }
+
+    @Bean
+    public ListLoanReviewsUseCase listLoanReviewsUseCase(){
+        return new ListLoanReviewsUseCase(loanPetitionRepository, loanTypeRepository, stateRepository, userInfoRepository);
     }
 }

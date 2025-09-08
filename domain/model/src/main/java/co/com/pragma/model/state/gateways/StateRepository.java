@@ -16,4 +16,7 @@ public interface StateRepository {
     Flux<State> findAll();
     // Eliminar estado por ID
     Mono<Void> deleteById(Integer id);
+
+    Flux<State> findByNames(Iterable<String> names);
+
 }

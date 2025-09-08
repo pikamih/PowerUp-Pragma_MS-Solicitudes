@@ -22,7 +22,15 @@ public class LoanPetitionUseCase {
     private final LoanTypeRepository loanTypeRepository;
     private final StateRepository stateRepository;
 
-    public Mono<LoanPetition> createLoanPetition(LoanPetition loanPetition) {
+    public Mono<LoanPetition> createLoanPetition(LoanPetition loanPetition, String tokenDocumentId, String tokenRole) {
+
+        if (!"CLIENTE".equalsIgnoreCase(tokenRole)) {
+            return Mono.error(new BusinessException(MessageCode.UNAUTHORIZED, new Object[]{}));
+        }
+        if (!loanPetition.getDocumentId().equals(tokenDocumentId)) {
+            return Mono.error(new BusinessException(MessageCode.USER_NOT_AUTHORIZED, new Object[]{}));
+        }
+
         if (loanPetition.getDocumentId() == null) {
             return Mono.error(new BusinessException(MessageCode.LOAN_PETITION_DOCUMENT_ID_REQUIRED, new Object[]{}));
         }

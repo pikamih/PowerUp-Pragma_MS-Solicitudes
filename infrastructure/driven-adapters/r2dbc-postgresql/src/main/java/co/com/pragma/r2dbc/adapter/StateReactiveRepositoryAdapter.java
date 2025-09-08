@@ -10,6 +10,11 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.StreamSupport;
+
 @Repository
 @RequiredArgsConstructor
 public class StateReactiveRepositoryAdapter implements StateRepository {
@@ -48,4 +53,15 @@ public class StateReactiveRepositoryAdapter implements StateRepository {
     public Mono<Void> deleteById(Integer id) {
         return repository.deleteById(id);
     }
+
+    @Override
+    public Flux<State> findByNames(Iterable<String> names) {
+        List<String> namesList = new ArrayList<>();
+        names.forEach(namesList::add); // convierte Iterable a List (Collection)
+        return repository.findByNameIn(namesList)
+                .map(stateEntityMapper::toDomain);
+    }
+
+
+
 }

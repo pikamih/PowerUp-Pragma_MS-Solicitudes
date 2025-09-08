@@ -32,8 +32,10 @@ public enum MessageCode {
     LOAN_PETITION_STATE_NOT_FOUND("v0019", "El estado no existe.", 400),
 
     // ===== Request general =====
-    REQUEST_BODY_EMPTY("v0020", "El body no puede estar vacío.", 400);
+    REQUEST_BODY_EMPTY("v0020", "El body no puede estar vacío.", 400),
 
+    USER_NOT_AUTHORIZED("v0021", "El documentId no corresponde al cliente logueado.", 404),
+    UNAUTHORIZED("v0022", "El usuario no es un cliente", 400);
     private final String errorCode;
     private final String message;
     private final Integer httpStatus;

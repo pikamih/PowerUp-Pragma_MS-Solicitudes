@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.GET, "/api/v1/state/**").hasAnyRole("ADMIN")
                         .pathMatchers(HttpMethod.GET, "/api/v1/loan-type/**").hasAnyRole("ADMIN")
                         .pathMatchers("/api/v1/loan-petition/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .pathMatchers("/api/v1/loan-petition/reviews/**").hasAnyRole("ASESOR")
                         // cualquier otra ruta requiere autenticación
                         .anyExchange().authenticated()
                 )
