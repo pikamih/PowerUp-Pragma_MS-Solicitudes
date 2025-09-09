@@ -24,16 +24,18 @@ public class LoanPetitionUseCase {
 
     public Mono<LoanPetition> createLoanPetition(LoanPetition loanPetition, String tokenDocumentId, String tokenRole) {
 
-        if (!"CLIENTE".equalsIgnoreCase(tokenRole)) {
-            return Mono.error(new BusinessException(MessageCode.CLIENT_ROLE_UNAUTHORIZED, new Object[]{tokenRole}));
+        if (loanPetition.getDocumentId() == null) {
+            return Mono.error(new BusinessException(MessageCode.LOAN_PETITION_DOCUMENT_ID_REQUIRED, new Object[]{}));
         }
+
         if (!loanPetition.getDocumentId().equals(tokenDocumentId)) {
             return Mono.error(new BusinessException(MessageCode.USER_NOT_AUTHORIZED, new Object[]{}));
         }
 
-        if (loanPetition.getDocumentId() == null) {
-            return Mono.error(new BusinessException(MessageCode.LOAN_PETITION_DOCUMENT_ID_REQUIRED, new Object[]{}));
+        if (!"CLIENTE".equalsIgnoreCase(tokenRole)) {
+            return Mono.error(new BusinessException(MessageCode.CLIENT_ROLE_UNAUTHORIZED, new Object[]{tokenRole}));
         }
+
         if (loanPetition.getLoanTypeId() == null) {
             return Mono.error(new BusinessException(MessageCode.LOAN_PETITION_TYPE_ID_REQUIRED, new Object[]{}));
         }

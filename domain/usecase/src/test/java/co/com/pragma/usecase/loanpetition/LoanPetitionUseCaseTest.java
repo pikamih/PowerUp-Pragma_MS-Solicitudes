@@ -77,7 +77,7 @@ class LoanPetitionUseCaseTest {
         when(loanTypeRepository.findById(loanPetition.getLoanTypeId())).thenReturn(Mono.just(mockLoanType()));
         when(loanPetitionRepository.save(any())).thenReturn(Mono.just(loanPetition));
 
-        StepVerifier.create(useCase.createLoanPetition(loanPetition))
+        StepVerifier.create(useCase.createLoanPetition(loanPetition, loanPetition.getDocumentId(), "CLIENTE"))
                 .expectNext(loanPetition)
                 .verifyComplete();
     }
@@ -87,7 +87,7 @@ class LoanPetitionUseCaseTest {
     void createLoanPetition_missingDocumentId() {
         LoanPetition loanPetition = mockLoanPetition().toBuilder().documentId(null).build();
 
-        StepVerifier.create(useCase.createLoanPetition(loanPetition))
+        StepVerifier.create(useCase.createLoanPetition(loanPetition, loanPetition.getDocumentId(), "CLIENTE"))
                 .expectErrorMatches(e -> e instanceof BusinessException &&
                         e.getMessage().contains(MessageCode.LOAN_PETITION_DOCUMENT_ID_REQUIRED.toString()))
                 .verify();
@@ -98,7 +98,7 @@ class LoanPetitionUseCaseTest {
     void createLoanPetition_missingLoanTypeId() {
         LoanPetition loanPetition = mockLoanPetition().toBuilder().loanTypeId(null).build();
 
-        StepVerifier.create(useCase.createLoanPetition(loanPetition))
+        StepVerifier.create(useCase.createLoanPetition(loanPetition, loanPetition.getDocumentId(), "CLIENTE"))
                 .expectErrorMatches(e -> e instanceof BusinessException &&
                          e.getMessage().contains(MessageCode.LOAN_PETITION_TYPE_ID_REQUIRED.toString()))
                 .verify();

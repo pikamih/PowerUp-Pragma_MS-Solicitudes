@@ -3,15 +3,17 @@ package co.com.pragma.api;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 
 @ContextConfiguration(classes = {RouterRestTest.TestConfig.class, RouterRest.class})
-@WebFluxTest
+@WebFluxTest(excludeAutoConfiguration = ReactiveSecurityAutoConfiguration.class) // <- deshabilita seguridad
 class RouterRestTest {
 
     @Autowired
