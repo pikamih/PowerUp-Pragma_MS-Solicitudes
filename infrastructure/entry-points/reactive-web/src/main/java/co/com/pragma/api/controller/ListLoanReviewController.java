@@ -13,7 +13,7 @@ import reactor.core.publisher.Flux;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/loan-petitions/reviews")
+@RequestMapping("/api/v1/loan-reviews")
 @RequiredArgsConstructor
 @Tag(name = "Loan Reviews", description = "APIs for reviewing loan petitions")
 public class ListLoanReviewController {

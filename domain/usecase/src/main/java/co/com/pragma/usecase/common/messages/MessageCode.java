@@ -6,36 +6,38 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MessageCode {
-    // ===== Estado =====
-    STATE_NAME_REQUIRED("v0001", "El nombre del estado es obligatorio.", 400),
-    STATE_ALREADY_EXISTS("v0002", "El estado ya existe.", 409),
-    STATE_NOT_FOUND_BY_ID("v0003", "El estado con id {0} no existe.", 404),
+    // ===== State =====
+    STATE_NAME_REQUIRED("v0001", "State name is required.", 400),
+    STATE_ALREADY_EXISTS("v0002", "State already exists.", 409),
+    STATE_NOT_FOUND_BY_ID("v0003", "State with ID {0} does not exist.", 404),
 
-    // ===== Tipo de préstamo =====
-    LOAN_TYPE_NAME_REQUIRED("v0004", "El nombre del tipo de préstamo es obligatorio.", 400),
-    LOAN_TYPE_MIN_AMOUNT_REQUIRED("v0005", "El monto mínimo es obligatorio.", 400),
-    LOAN_TYPE_MIN_AMOUNT_INVALID("v0006", "El monto mínimo debe ser mayor o igual a 0.", 400),
-    LOAN_TYPE_MAX_AMOUNT_REQUIRED("v0007", "El monto máximo es obligatorio.", 400),
-    LOAN_TYPE_MAX_AMOUNT_INVALID("v0008", "El monto máximo debe ser mayor o igual al mínimo.", 400),
-    LOAN_TYPE_INTEREST_RATE_REQUIRED("v0009", "La tasa de interés es obligatoria.", 400),
-    LOAN_TYPE_INTEREST_RATE_INVALID("v0010", "La tasa de interés debe ser mayor o igual a 0.", 400),
-    LOAN_TYPE_ALREADY_EXISTS("v0011", "El tipo de préstamo ya existe.", 409),
-    LOAN_TYPE_NOT_FOUND_BY_ID("v0012", "El tipo de préstamo con id {0} no existe.", 404),
+    // ===== Loan type =====
+    LOAN_TYPE_NAME_REQUIRED("v0004", "Loan type name is required.", 400),
+    LOAN_TYPE_MIN_AMOUNT_REQUIRED("v0005", "Minimum amount is required.", 400),
+    LOAN_TYPE_MIN_AMOUNT_INVALID("v0006", "Minimum amount must be greater than or equal to 0.", 400),
+    LOAN_TYPE_MAX_AMOUNT_REQUIRED("v0007", "Maximum amount is required.", 400),
+    LOAN_TYPE_MAX_AMOUNT_INVALID("v0008", "Maximum amount must be greater than or equal to the minimum.", 400),
+    LOAN_TYPE_INTEREST_RATE_REQUIRED("v0009", "Interest rate is required.", 400),
+    LOAN_TYPE_INTEREST_RATE_INVALID("v0010", "Interest rate must be greater than or equal to 0.", 400),
+    LOAN_TYPE_ALREADY_EXISTS("v0011", "Loan type already exists.", 409),
+    LOAN_TYPE_NOT_FOUND_BY_ID("v0012", "Loan type with ID {0} does not exist.", 404),
 
-    // ===== Solicitud de préstamo =====
-    LOAN_PETITION_DOCUMENT_ID_REQUIRED("v0013", "El documentId es obligatorio.", 400),
-    LOAN_PETITION_TYPE_ID_REQUIRED("v0014", "El loanTypeId es obligatorio.", 400),
-    LOAN_PETITION_PENDING_REVIEW("v0015", "Pendiente de revisión.", 400),
-    LOAN_PETITION_INITIAL_STATE_NOT_FOUND("v0016", "El estado inicial 'Pendiente de revisión' no existe en la BD.", 400),
-    LOAN_PETITION_TYPE_NOT_FOUND("v0017", "El tipo de préstamo no existe.", 400),
-    LOAN_PETITION_NOT_FOUND("v0018", "Solicitud de préstamo no encontrada.", 404),
-    LOAN_PETITION_STATE_NOT_FOUND("v0019", "El estado no existe.", 400),
+    // ===== Loan petition =====
+    LOAN_PETITION_DOCUMENT_ID_REQUIRED("v0013", "Document ID is required.", 400),
+    LOAN_PETITION_TYPE_ID_REQUIRED("v0014", "Loan type ID is required.", 400),
+    LOAN_PETITION_PENDING_REVIEW("v0015", "Pending review.", 400),
+    LOAN_PETITION_INITIAL_STATE_NOT_FOUND("v0016", "Initial state 'Pending review' does not exist in the database.", 400),
+    LOAN_PETITION_TYPE_NOT_FOUND("v0017", "Loan type does not exist.", 400),
+    LOAN_PETITION_NOT_FOUND("v0018", "Loan petition not found.", 404),
+    LOAN_PETITION_STATE_NOT_FOUND("v0019", "State does not exist.", 400),
 
     // ===== Request general =====
-    REQUEST_BODY_EMPTY("v0020", "El body no puede estar vacío.", 400),
+    REQUEST_BODY_EMPTY("v0020", "Request body cannot be empty.", 400),
 
-    USER_NOT_AUTHORIZED("v0021", "El documentId no corresponde al cliente logueado.", 404),
-    UNAUTHORIZED("v0022", "El usuario no es un cliente", 400);
+    USER_NOT_AUTHORIZED("v0021", "Document ID does not belong to the logged-in client.", 404),
+    CLIENT_ROLE_UNAUTHORIZED("v0022", "The user role is not a CLIENTE.", 400),
+    ASESOR_ROLE_UNAUTHORIZED("v0022", "The user role is not a ASESOR.", 400);
+
     private final String errorCode;
     private final String message;
     private final Integer httpStatus;

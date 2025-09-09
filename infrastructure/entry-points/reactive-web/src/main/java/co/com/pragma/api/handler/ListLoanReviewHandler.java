@@ -2,6 +2,7 @@ package co.com.pragma.api.handler;
 
 import co.com.pragma.api.dto.response.ListLoanReviewResponseDto;
 import co.com.pragma.api.mapper.ListLoanReviewWebMapper;
+import co.com.pragma.jwt.JwtValidator;
 import co.com.pragma.usecase.loanpetition.ListLoanReviewsUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class ListLoanReviewHandler {
 
     private final ListLoanReviewsUseCase listLoanReviewsUseCase;
     private final ListLoanReviewWebMapper mapper;
+    private final JwtValidator jwtValidator;
 
     public Mono<ServerResponse> listLoanReviews(ServerRequest request) {
         // Parámetros de paginación y búsqueda

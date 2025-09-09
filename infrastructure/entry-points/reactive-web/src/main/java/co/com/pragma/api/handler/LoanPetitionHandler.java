@@ -31,7 +31,7 @@ public class LoanPetitionHandler {
 
         String authHeader = request.headers().firstHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return Mono.error(new BusinessException(MessageCode.USER_NOT_AUTHORIZED, new Object[]{}));
+            return Mono.error(new BusinessException(MessageCode.USER_NOT_AUTHORIZED, new Object[]{authHeader}));
         }
         String token = authHeader.substring(7);
 

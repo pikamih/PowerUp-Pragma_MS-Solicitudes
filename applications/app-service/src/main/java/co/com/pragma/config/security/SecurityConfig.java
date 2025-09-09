@@ -32,10 +32,10 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
                         // endpoints de solicitudes
-                        .pathMatchers(HttpMethod.GET, "/api/v1/state/**").hasAnyRole("ADMIN")
-                        .pathMatchers(HttpMethod.GET, "/api/v1/loan-type/**").hasAnyRole("ADMIN")
-                        .pathMatchers("/api/v1/loan-petition/**").hasAnyRole("ADMIN", "CLIENTE")
-                        .pathMatchers("/api/v1/loan-petition/reviews/**").hasAnyRole("ASESOR")
+                        .pathMatchers(HttpMethod.GET, "/api/v1/states/**").hasAnyRole("ADMIN")
+                        .pathMatchers(HttpMethod.GET, "/api/v1/loan-types/**").hasAnyRole("ADMIN")
+                        .pathMatchers("/api/v1/loan-petitions/**").hasAnyRole("ADMIN", "CLIENTE", "ASESOR")
+                        .pathMatchers("/api/v1/loan-reviews/**").hasAnyRole("ASESOR")
                         // cualquier otra ruta requiere autenticación
                         .anyExchange().authenticated()
                 )

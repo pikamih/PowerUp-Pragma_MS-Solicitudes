@@ -54,13 +54,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-        HttpStatus status =
-                HttpStatus.valueOf(ex.getCode().getHttpStatus());
+        HttpStatus status =  HttpStatus.valueOf(ex.getCode().getHttpStatus());
 
 
         // Traduce el mensaje usando el MessageTranslator y los parámetros
         String message = translator.translate(ex.getCode(), ex.getParams());
-        System.out.println("messageeee: " +message);
         return ResponseEntity.status(status)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorResponse(
