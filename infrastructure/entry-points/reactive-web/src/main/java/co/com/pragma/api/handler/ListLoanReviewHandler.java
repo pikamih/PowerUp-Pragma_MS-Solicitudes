@@ -1,6 +1,8 @@
 package co.com.pragma.api.handler;
 
+import co.com.pragma.api.dto.request.LoanDecisionRequest;
 import co.com.pragma.api.dto.response.ListLoanReviewResponseDto;
+import co.com.pragma.api.dto.response.LoanDecisionResponse;
 import co.com.pragma.api.mapper.ListLoanReviewWebMapper;
 import co.com.pragma.jwt.JwtValidator;
 import co.com.pragma.usecase.loanpetition.ListLoanReviewsUseCase;
@@ -49,5 +51,20 @@ public class ListLoanReviewHandler {
         return ServerResponse.ok()
                 .contentType(APPLICATION_JSON)
                 .body(response, ListLoanReviewResponseDto.class);
+    }
+
+    public Mono<ServerResponse> approveOrReject(ServerRequest request) {
+        String loanId = request.pathVariable("loanId");
+
+        return request.bodyToMono(LoanDecisionRequest.class)
+                .map(dto -> mapper.toDomain(dto, loanId))
+                .flatMap(listLoanReviewsUseCase::approveOrRejectLoan)
+                .map(loanPetition -> LoanDecisionResponse.builder()
+                        .loanId(loanPetition.getId())
+                        .decision(request.bodyToMono(LoanDecisionRequest.class).block().getDecision())
+                        .build())
+                .flatMap(response -> ServerResponse.ok()
+                        .contentType(APPLICATION_JSON)
+                        .bodyValue(response));
     }
 }

@@ -4,28 +4,24 @@ spring:
   application:
     name: "MS_Solicitudes"
   r2dbc:
-    url: r2dbc:postgresql://db:5432/authentication_db
-    username: postgres
-    password: root
+    url: "r2dbc:postgresql://db:5432/authentication_db"
+    username: "postgres"
+    password: "root"
     pool:
       initial-size: 5
       max-size: 20
       max-idle-time: "30m"
-
   security:
     user:
-      name: admin
-      password: admin123
-
+      name: "admin"
+      password: "admin123"
   main:
     allow-bean-definition-overriding: true
-
 security:
   jwt:
-    private-key-path: ${JWT_PRAGMA_PRIVATE_KEY_PATH}
-    public-key-path: ${JWT_PRAGMA_PUBLIC_KEY_PATH}
-    expiration: 3600 #en segundos
-
+    private-key-path: "${JWT_PRAGMA_PRIVATE_KEY_PATH}"
+    public-key-path: "${JWT_PRAGMA_PUBLIC_KEY_PATH}"
+    expiration: 3600
 management:
   endpoints:
     web:
@@ -45,4 +41,8 @@ logging:
     org.springframework.web: "DEBUG"
     org.springframework.http.converter.json: "DEBUG"
     com.fasterxml.jackson.databind: "DEBUG"
-
+adapter:
+  sqs:
+    region: "us-east-1"
+    queueUrl: "https://sqs.us-east-1.amazonaws.com/068882398128/loan-approval-rejection-queue"
+    endpoint: ""

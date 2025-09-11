@@ -28,3 +28,7 @@ include ':message-translator'
 project(':message-translator').projectDir = file('./infrastructure/helpers/message-translator')
 include ':jwt'
 project(':jwt').projectDir = file('./infrastructure/driven-adapters/jwt')
+include ':metrics'
+project(':metrics').projectDir = file('./infrastructure/helpers/metrics')
+include ':sqs-sender'
+project(':sqs-sender').projectDir = file('./infrastructure/driven-adapters/sqs-sender')

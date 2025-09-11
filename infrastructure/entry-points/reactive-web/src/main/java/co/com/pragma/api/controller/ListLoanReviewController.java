@@ -1,7 +1,10 @@
 package co.com.pragma.api.controller;
 
+import co.com.pragma.api.dto.request.LoanDecisionRequest;
 import co.com.pragma.api.dto.response.ListLoanReviewResponseDto;
+import co.com.pragma.api.dto.response.LoanDecisionResponse;
 import co.com.pragma.api.mapper.ListLoanReviewWebMapper;
+import co.com.pragma.model.loanpetition.LoanDecision;
 import co.com.pragma.usecase.loanpetition.ListLoanReviewsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -45,4 +49,19 @@ public class ListLoanReviewController {
         return listLoanReviewsUseCase.executeByStateNames(namesToFilter, search, page, size)
                 .map(loanReviewWebMapper::toResponseDto);
     }
+
+    @PatchMapping("/{loanId}")
+    public Mono<LoanDecisionResponse> approveOrReject(
+            @PathVariable("loanId") String loanId,
+            @RequestBody LoanDecisionRequest request) {
+
+        LoanDecision decision = loanReviewWebMapper.toDomain(request, loanId);
+        return listLoanReviewsUseCase.approveOrRejectLoan(decision)
+                .map(lp -> LoanDecisionResponse.builder()
+                        .loanId(lp.getId())
+                        .decision(request.getDecision())
+                        .build());
+    }
+
+
 }
