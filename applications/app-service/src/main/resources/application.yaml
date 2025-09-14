@@ -46,3 +46,12 @@ adapter:
     region: "us-east-1"
     queueUrl: "https://sqs.us-east-1.amazonaws.com/068882398128/loan-approval-rejection-queue"
     endpoint: ""
+entrypoint:
+  sqs:
+    region: "us-east-1"
+    endpoint: ""
+    queueUrl: "https://sqs.us-east-1.amazonaws.com/068882398128/loan-approval-results-queue"
+    waitTimeSeconds: 20
+    maxNumberOfMessages: 10
+    visibilityTimeoutSeconds: 10
+    numberOfThreads: 1

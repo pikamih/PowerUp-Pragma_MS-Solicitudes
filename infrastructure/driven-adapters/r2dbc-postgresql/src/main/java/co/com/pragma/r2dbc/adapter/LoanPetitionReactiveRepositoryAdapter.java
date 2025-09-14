@@ -3,7 +3,6 @@ package co.com.pragma.r2dbc.adapter;
 import co.com.pragma.model.loanpetition.LoanPetition;
 import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
 import co.com.pragma.model.userinfo.UserInfo;
-import co.com.pragma.model.userinfo.gateways.UserInfoRepository;
 import co.com.pragma.r2dbc.LoanPetitionReactiveRepository;
 import co.com.pragma.r2dbc.UserInfoReactiveRepository;
 import co.com.pragma.r2dbc.mapper.LoanPetitionEntityMapper;
@@ -14,7 +13,6 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.UUID;
 

@@ -20,5 +20,6 @@ public class ListLoanReviewResponseDto {
     private BigDecimal interestRate;
     private String loanState;
     private BigDecimal salarioBase;
+    private BigDecimal montoMensualSolicitud;
     private BigDecimal deudaTotalMensualSolicitudesAprobadas;
 }

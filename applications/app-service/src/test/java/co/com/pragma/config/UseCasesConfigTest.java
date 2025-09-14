@@ -2,6 +2,7 @@ package co.com.pragma.config;
 
 import co.com.pragma.model.loanpetition.gateways.LoanNotificationGateway;
 import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
+import co.com.pragma.model.loanpetition.gateways.LoanReviewRepository;
 import co.com.pragma.model.loantype.gateways.LoanTypeRepository;
 import co.com.pragma.model.state.gateways.StateRepository;
 import co.com.pragma.model.userinfo.gateways.UserInfoRepository;
@@ -61,5 +62,11 @@ public class UseCasesConfigTest {
         public LoanNotificationGateway notificationGateway() {
             return Mockito.mock(LoanNotificationGateway.class); // <- agregado
         }
+
+        @Bean
+        public LoanReviewRepository loanReviewRepository() {
+            return Mockito.mock(LoanReviewRepository.class);
+        }
+
     }
 }

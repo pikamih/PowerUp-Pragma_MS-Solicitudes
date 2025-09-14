@@ -2,6 +2,7 @@ package co.com.pragma.config;
 
 import co.com.pragma.model.loanpetition.gateways.LoanNotificationGateway;
 import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
+import co.com.pragma.model.loanpetition.gateways.LoanReviewRepository;
 import co.com.pragma.model.loantype.gateways.LoanTypeRepository;
 import co.com.pragma.model.state.gateways.StateRepository;
 import co.com.pragma.model.userinfo.gateways.UserInfoRepository;
@@ -27,15 +28,15 @@ public class UseCasesConfig {
         private final StateRepository stateRepository;
         private final LoanTypeRepository loanTypeRepository;
         private final LoanPetitionRepository loanPetitionRepository;
-        private final UserInfoRepository userInfoRepository;
         private final LoanNotificationGateway notificationGateway;
+        private final LoanReviewRepository loanReviewRepository;
 
-    public UseCasesConfig(StateRepository stateRepository, LoanTypeRepository loanTypeRepository, LoanPetitionRepository loanPetitionRepository, UserInfoRepository userInfoRepository, LoanNotificationGateway notificationGateway) {
+    public UseCasesConfig(StateRepository stateRepository, LoanTypeRepository loanTypeRepository, LoanPetitionRepository loanPetitionRepository, LoanNotificationGateway notificationGateway, LoanReviewRepository loanReviewRepository) {
         this.stateRepository = stateRepository;
         this.loanTypeRepository = loanTypeRepository;
         this.loanPetitionRepository = loanPetitionRepository;
-        this.userInfoRepository = userInfoRepository;
         this.notificationGateway = notificationGateway;
+        this.loanReviewRepository = loanReviewRepository;
     }
 
 
@@ -51,11 +52,11 @@ public class UseCasesConfig {
 
     @Bean
     public LoanPetitionUseCase loanPetitionUseCase(){
-        return new LoanPetitionUseCase(loanPetitionRepository, loanTypeRepository, stateRepository);
+        return new LoanPetitionUseCase(loanPetitionRepository, loanTypeRepository, stateRepository, notificationGateway, loanReviewRepository);
     }
 
     @Bean
     public ListLoanReviewsUseCase listLoanReviewsUseCase(){
-        return new ListLoanReviewsUseCase(loanPetitionRepository, loanTypeRepository, stateRepository, userInfoRepository, notificationGateway);
+        return new ListLoanReviewsUseCase(loanPetitionRepository, stateRepository, notificationGateway, loanReviewRepository);
     }
 }

@@ -1,7 +1,10 @@
 package co.com.pragma.usecase.loanpetition;
 
 import co.com.pragma.model.loanpetition.LoanPetition;
+import co.com.pragma.model.loanpetition.LoanReview;
+import co.com.pragma.model.loanpetition.gateways.LoanNotificationGateway;
 import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
+import co.com.pragma.model.loanpetition.gateways.LoanReviewRepository;
 import co.com.pragma.model.loantype.LoanType;
 import co.com.pragma.model.loantype.gateways.LoanTypeRepository;
 import co.com.pragma.model.state.State;
@@ -10,7 +13,6 @@ import co.com.pragma.usecase.common.messages.BusinessException;
 import co.com.pragma.usecase.common.messages.MessageCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -28,15 +30,26 @@ class LoanPetitionUseCaseTest {
     private LoanTypeRepository loanTypeRepository;
     private StateRepository stateRepository;
     private LoanPetitionUseCase useCase;
+    private LoanNotificationGateway notificationGateway;
+    private LoanReviewRepository loanReviewRepository;
 
     @BeforeEach
     void setUp() {
         loanPetitionRepository = mock(LoanPetitionRepository.class);
         loanTypeRepository = mock(LoanTypeRepository.class);
         stateRepository = mock(StateRepository.class);
+        loanReviewRepository = mock(LoanReviewRepository.class);          // <- inicializar mock
+        notificationGateway = mock(LoanNotificationGateway.class);       // <- inicializar mock
 
-        useCase = new LoanPetitionUseCase(loanPetitionRepository, loanTypeRepository, stateRepository);
+        useCase = new LoanPetitionUseCase(
+                loanPetitionRepository,
+                loanTypeRepository,
+                stateRepository,
+                notificationGateway,
+                loanReviewRepository
+        );
     }
+
 
     // --- DataMock ---
     private LoanPetition mockLoanPetition() {
@@ -57,6 +70,7 @@ class LoanPetitionUseCaseTest {
         return LoanType.builder()
                 .id(1)
                 .name("Personal")
+                .automaticValidation(Boolean.TRUE)
                 .build();
     }
 
@@ -77,10 +91,16 @@ class LoanPetitionUseCaseTest {
         when(loanTypeRepository.findById(loanPetition.getLoanTypeId())).thenReturn(Mono.just(mockLoanType()));
         when(loanPetitionRepository.save(any())).thenReturn(Mono.just(loanPetition));
 
+        // Nuevo: mocks para HU7
+        LoanReview loanReview = mockLoanReview();
+        when(loanReviewRepository.mapToLoanReview(loanPetition)).thenReturn(Flux.just(loanReview));
+        when(notificationGateway.sendMessageSQS(anyString())).thenReturn(Mono.empty());
+
         StepVerifier.create(useCase.createLoanPetition(loanPetition, loanPetition.getDocumentId(), "CLIENTE"))
                 .expectNext(loanPetition)
                 .verifyComplete();
     }
+
 
 
     @Test
@@ -172,4 +192,22 @@ class LoanPetitionUseCaseTest {
                         e.getMessage().contains(MessageCode.LOAN_PETITION_NOT_FOUND.toString()))
                 .verify();
     }
+
+    private LoanReview mockLoanReview() {
+        LoanReview review = new LoanReview();
+        review.setLoanId(UUID.randomUUID());
+        review.setNombre("Joseph Ipanaque");
+        review.setDocumentId("75268234");
+        review.setEmail("joseph.ipanaque@email.com");
+        review.setAmount(BigDecimal.valueOf(10000));
+        review.setTermMonths(24);
+        review.setLoanType("Préstamo Vehicular");
+        review.setInterestRate(BigDecimal.valueOf(5.5));
+        review.setLoanState("Pendiente de revisión");
+        review.setSalarioBase(BigDecimal.valueOf(3800.0));
+        review.setMontoMensualSolicitud(BigDecimal.valueOf(440.96));
+        review.setDeudaTotalMensualSolicitudesAprobadas(BigDecimal.valueOf(0));
+        return review;
+    }
+
 }

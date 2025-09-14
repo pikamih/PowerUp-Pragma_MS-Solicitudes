@@ -6,12 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class LoanReview {
+    private UUID LoanId;
+    private String documentId;
     private String nombre;
     private String email;
     private BigDecimal amount;
@@ -20,5 +23,6 @@ public class LoanReview {
     private BigDecimal interestRate;
     private String loanState;
     private BigDecimal salarioBase;
+    private BigDecimal montoMensualSolicitud;
     private BigDecimal deudaTotalMensualSolicitudesAprobadas;
 }
