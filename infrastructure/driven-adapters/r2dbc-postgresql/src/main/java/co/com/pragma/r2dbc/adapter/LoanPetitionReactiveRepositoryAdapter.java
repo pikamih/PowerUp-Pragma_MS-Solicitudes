@@ -2,11 +2,8 @@ package co.com.pragma.r2dbc.adapter;
 
 import co.com.pragma.model.loanpetition.LoanPetition;
 import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
-import co.com.pragma.model.userinfo.UserInfo;
 import co.com.pragma.r2dbc.LoanPetitionReactiveRepository;
-import co.com.pragma.r2dbc.UserInfoReactiveRepository;
 import co.com.pragma.r2dbc.mapper.LoanPetitionEntityMapper;
-import co.com.pragma.r2dbc.mapper.UserInfoEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.reactive.TransactionalOperator;
@@ -21,10 +18,8 @@ import java.util.UUID;
 public class LoanPetitionReactiveRepositoryAdapter implements LoanPetitionRepository {
 
     private final LoanPetitionReactiveRepository repository;
-    private final UserInfoReactiveRepository userInfoRepository;
     private final TransactionalOperator transactionalOperator;
     private final LoanPetitionEntityMapper loanPetitionEntityMapper;
-    private final UserInfoEntityMapper userInfoEntityMapper;
 
     @Override
     public Mono<LoanPetition> save(LoanPetition loanPetition) {
@@ -55,12 +50,6 @@ public class LoanPetitionReactiveRepositoryAdapter implements LoanPetitionReposi
     public Flux<LoanPetition> findByStateIds(Collection<Integer> stateIds) {
         return repository.findByStateIdIn(stateIds)
                 .map(loanPetitionEntityMapper::toDomain);
-    }
-
-    @Override
-    public Flux<UserInfo> findByDocumentId(String documentId) {
-        return userInfoRepository.findByDocumentId(documentId) // Flux<UserInfoEntity>
-                .map(userInfoEntityMapper::toDomain);// Flux<UserInfo>
     }
 
     @Override

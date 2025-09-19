@@ -15,8 +15,8 @@ WORKDIR /app
 COPY applications/app-service/build/libs/MS_Solicitudes.jar ./MS_Solicitudes.jar
 
 # Definir variables de entorno para JWT
-ENV JWT_PRAGMA_PRIVATE_KEY_PATH=/keys/private.pem
-ENV JWT_PRAGMA_PUBLIC_KEY_PATH=/keys/public.pem
+ENV JWT_PRAGMA_PRIVATE_KEY_PATH=/keys/private_key.pem
+ENV JWT_PRAGMA_PUBLIC_KEY_PATH=/keys/public_key.pem
 
 # Puerto que expone la app
 EXPOSE 8081

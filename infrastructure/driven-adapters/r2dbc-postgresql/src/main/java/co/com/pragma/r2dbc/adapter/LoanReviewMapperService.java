@@ -22,32 +22,30 @@ import java.math.RoundingMode;
 @RequiredArgsConstructor
 public class LoanReviewMapperService implements LoanReviewRepository {
 
-
     private final UserInfoRepository userInfoRepository;
     private final LoanTypeRepository loanTypeRepository;
     private final StateRepository stateRepository;
     private final LoanPetitionRepository loanPetitionRepository;
 
-
-
     public Flux<LoanReview> mapToLoanReview(LoanPetition petition) {
-        // Traer datos del usuario
-        Mono<UserInfo> userMono = userInfoRepository.findByDocumentId(petition.getDocumentId())
-                .single(); // asumimos que hay un solo usuario por documentId
-        // Obtener el state "Solicitud aprobada"
+        // Traer datos del usuario desde MS_Authentication
+        Mono<UserInfo> userMono = userInfoRepository.findByDocumentId(petition.getDocumentId().trim());
+
+        // Obtener el state "APROBADO"
         Mono<State> approvedStateMono = stateRepository.findByName("APROBADO");
-        // Traer todas las solicitudes aprobadas del usuario y calcular la deuda total
+
         // Calcular deuda total mensual de solicitudes aprobadas
         Mono<BigDecimal> totalApprovedDebtMono = approvedStateMono.flatMapMany(state ->
                         loanPetitionRepository.findPetitionsByDocumentId(petition.getDocumentId())
                                 .filter(p -> p.getStateId().equals(state.getId()))
                 )
-                .flatMap(approvedPetition -> loanTypeRepository.findById(approvedPetition.getLoanTypeId())
-                        .map(loanType -> calculateMonthlyFee(
-                                approvedPetition.getAmount(),
-                                loanType.getInterestRate(),
-                                approvedPetition.getTermMonths()
-                        ))
+                .flatMap(approvedPetition ->
+                        loanTypeRepository.findById(approvedPetition.getLoanTypeId())
+                                .map(loanType -> calculateMonthlyFee(
+                                        approvedPetition.getAmount(),
+                                        loanType.getInterestRate(),
+                                        approvedPetition.getTermMonths()
+                                ))
                 )
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -87,14 +85,12 @@ public class LoanReviewMapperService implements LoanReviewRepository {
     }
 
     private BigDecimal calculateMonthlyFee(BigDecimal monto, BigDecimal interesAnual, int termMonths) {
-        // Pasar de tasa anual (%) a tasa mensual (decimal)
         BigDecimal tasaMensual = interesAnual.divide(BigDecimal.valueOf(100 * 12), 10, RoundingMode.HALF_UP);
 
         if (tasaMensual.compareTo(BigDecimal.ZERO) == 0) {
             return monto.divide(BigDecimal.valueOf(termMonths), 2, RoundingMode.HALF_UP);
         }
 
-        // Fórmula de cuota: P * i / (1 - (1+i)^-n)
         BigDecimal numerator = monto.multiply(tasaMensual);
         BigDecimal denominator = BigDecimal.ONE.subtract(
                 BigDecimal.ONE.add(tasaMensual).pow(-termMonths, new java.math.MathContext(10))
@@ -102,5 +98,4 @@ public class LoanReviewMapperService implements LoanReviewRepository {
 
         return numerator.divide(denominator, 2, RoundingMode.HALF_UP);
     }
-
 }

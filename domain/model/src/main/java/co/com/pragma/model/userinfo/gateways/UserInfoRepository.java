@@ -6,6 +6,6 @@ import reactor.core.publisher.Mono;
 
 public interface UserInfoRepository {
 
-    Flux<UserInfo> findByDocumentId(String documentId);
+    Mono<UserInfo> findByDocumentId(String documentId);
 
 }

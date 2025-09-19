@@ -16,7 +16,6 @@ public interface LoanPetitionRepository {
     Flux<LoanPetition> findAll();
     Mono<Void> deleteById(UUID id);
     Flux<LoanPetition> findByStateIds(Collection<Integer> stateIds);
-    Flux<UserInfo> findByDocumentId(String documentId);
     Flux<LoanPetition> findPetitionsByDocumentId(String documentId);
 
 

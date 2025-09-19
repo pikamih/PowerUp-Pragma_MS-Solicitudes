@@ -4,17 +4,13 @@ spring:
   application:
     name: "MS_Solicitudes"
   r2dbc:
-    url: "r2dbc:postgresql://db:5432/authentication_db"
+    url: ${R2DBC_DB_LOAN}
     username: "postgres"
     password: "root"
     pool:
       initial-size: 5
       max-size: 20
       max-idle-time: "30m"
-  security:
-    user:
-      name: "admin"
-      password: "admin123"
   main:
     allow-bean-definition-overriding: true
 security:
@@ -43,15 +39,43 @@ logging:
     com.fasterxml.jackson.databind: "DEBUG"
 adapter:
   sqs:
-    region: "us-east-1"
-    queueUrl: "https://sqs.us-east-1.amazonaws.com/068882398128/loan-approval-rejection-queue"
-    endpoint: ""
+    region: "${AWS_REGION}"
+    queueUrl: "${SQS_ENDPOINT}"
+    endpoint: "https://sqs.us-east-1.amazonaws.com"
+  restconsumer:
+    timeout: 5000
+    url: "${ENDPOINT_MS_AUTH_DOCKER}"
 entrypoint:
   sqs:
-    region: "us-east-1"
-    endpoint: ""
-    queueUrl: "https://sqs.us-east-1.amazonaws.com/068882398128/loan-approval-results-queue"
+    region: "${AWS_REGION}"
+    endpoint: "https://sqs.us-east-1.amazonaws.com"
+    queueUrl: "${SQS_ENDPOINT_LISTENER}"
     waitTimeSeconds: 20
     maxNumberOfMessages: 10
     visibilityTimeoutSeconds: 10
     numberOfThreads: 1
+resilience4j:
+  circuitbreaker:
+    instances:
+      testGet:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
+      testPost:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
+aws:
+  region: "${AWS_REGION}"
+  secretKeyId: "${AWS_ACCESS_KEY_ID}"
+  secretAccessId: "${AWS_SECRET_ACCESS_KEY}"

@@ -1,11 +1,16 @@
 package co.com.pragma.sqs.listener.config;
 
 import co.com.pragma.sqs.listener.helper.SQSListener;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Mono;
-import software.amazon.awssdk.auth.credentials.*;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProviderChain;
+import software.amazon.awssdk.auth.credentials.ContainerCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.SystemPropertyCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.WebIdentityTokenFileCredentialsProvider;
 import software.amazon.awssdk.metrics.MetricPublisher;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
@@ -15,7 +20,6 @@ import java.net.URI;
 import java.util.function.Function;
 
 @Configuration
-@ConditionalOnMissingBean(SqsAsyncClient.class)
 public class SQSConfig {
 
     @Bean
@@ -30,22 +34,11 @@ public class SQSConfig {
 
     @Bean
     public SqsAsyncClient configSqs(SQSProperties properties, MetricPublisher publisher) {
-
-        String region = System.getenv("AWS_REGION");
-        String accessKey = System.getenv("AWS_ACCESS_KEY_ID");
-        String secretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
-        String endpoint = System.getenv("SQS_ENDPOINT_LISTENER");
-
-
-
         return SqsAsyncClient.builder()
-                .endpointOverride(endpoint != null ? URI.create(endpoint) : null)
-                .region(Region.of(region))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKey, secretKey)
-                        )
-                )
+                .endpointOverride(resolveEndpoint(properties))
+                .region(Region.of(properties.region()))
+                .overrideConfiguration(o -> o.addMetricPublisher(publisher))
+                .credentialsProvider(getProviderChain())
                 .build();
     }
 

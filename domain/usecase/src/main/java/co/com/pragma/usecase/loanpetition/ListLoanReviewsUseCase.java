@@ -29,7 +29,7 @@ public class ListLoanReviewsUseCase {
     public Flux<LoanReview> executeByStateNames(List<String> stateNames, String search, int page, int size) {
         // Nombres por defecto si no envían ninguno
         List<String> namesToSearch = (stateNames == null || stateNames.isEmpty()) ?
-                List.of("Pendiente de revisión", "RECHAZADO", "Revisión manual") :
+                List.of("Pendiente de revisión", "RECHAZADO", "REVISION MANUAL") :
                 stateNames;
 
         return stateRepository.findByNames(namesToSearch)  // Flux<State>
@@ -60,10 +60,12 @@ public class ListLoanReviewsUseCase {
                             loan.setUpdatedAt(LocalDateTime.now());
                             return loanPetitionRepository.save(loan)
                                     .flatMap(savedLoan -> {
-                                        String message = String.format("{\"actionType\":\"%s\",\"loanId\":\"%s\",\"status\":\"%s\"}",
+                                        String message = String.format("{\"actionType\":\"%s\",\"loanId\":\"%s\",\"decision\":\"%s\",\"amount\":\"%s\"}",
                                                 "Notify",
                                                 savedLoan.getId(),
-                                                decisionName);
+                                                decisionName,
+                                                savedLoan.getAmount());
+                                        System.out.println("Mensaje enviado a la cola: " + message);
                                         return notificationGateway.sendMessageSQS(message)
                                                 .thenReturn(savedLoan);
                                     });

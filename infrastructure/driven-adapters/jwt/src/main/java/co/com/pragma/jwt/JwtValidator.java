@@ -4,12 +4,14 @@ import co.com.pragma.jwt.adapter.PemKeys;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.security.PublicKey;
 
+@Slf4j
 @Component
 public class JwtValidator {
 
@@ -20,6 +22,8 @@ public class JwtValidator {
     }
 
     public Mono<Claims> validateToken(String token) {
+        log.info("Validando token localmente con clave pública: {}", publicKey.getAlgorithm());
+
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(publicKey)

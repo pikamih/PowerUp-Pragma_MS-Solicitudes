@@ -26,7 +26,7 @@ public class SQSProcessor implements Function<Message, Mono<Void>> {
         try {
             // Parsear JSON del mensaje SQS
             LoanDecision decision = objectMapper.readValue(message.body(), LoanDecision.class);
-
+            System.out.println("Mensaje recibido de la cola: " + message);
             return loanPetitionUseCase.updateLoanStateByDecision(
                     UUID.fromString(decision.getLoanId()),
                     decision.getDecision()

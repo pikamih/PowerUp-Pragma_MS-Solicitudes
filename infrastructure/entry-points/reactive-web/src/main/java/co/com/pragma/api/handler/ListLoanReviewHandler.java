@@ -40,7 +40,7 @@ public class ListLoanReviewHandler {
                     .map(String::trim)
                     .toList();
         } else {
-            stateNames = List.of("Pendiente de revisión", "Solicitud rechazada", "Revisión manual");
+            stateNames = List.of("Pendiente de revisión", "RECHAZADO", "REVISION MANUAL");
         }
 
         // Llamada al UseCase, delegando paginación y filtrado

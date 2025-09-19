@@ -43,7 +43,7 @@ public class ListLoanReviewController {
         // Definir estados por defecto si no se envían
         List<String> namesToFilter = (stateNames != null && !stateNames.isEmpty())
                 ? stateNames
-                : List.of("Pendiente de revisión", "Solicitud rechazada", "Revisión manual");
+                : List.of("Pendiente de revisión", "RECHAZADO", "REVISION MANUAL");
 
         // Pasar parámetros al UseCase que ahora maneja filtrado y paginación
         return listLoanReviewsUseCase.executeByStateNames(namesToFilter, search, page, size)

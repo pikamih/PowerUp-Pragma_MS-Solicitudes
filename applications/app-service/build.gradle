@@ -1,6 +1,10 @@
 apply plugin: 'org.springframework.boot'
 
 dependencies {
+	implementation 'com.github.bancolombia:aws-secrets-manager-async:4.4.34'
+    implementation platform('software.amazon.awssdk:bom:2.22.13')
+    implementation 'software.amazon.awssdk:regions'
+	implementation project(':rest-consumer')
 	implementation project(':sqs-listener')
 	implementation project(':sqs-sender')
 	implementation project(':metrics')
