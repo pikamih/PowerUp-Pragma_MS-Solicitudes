@@ -5,7 +5,6 @@ import co.com.pragma.model.loanpetition.gateways.LoanPetitionRepository;
 import co.com.pragma.model.loanpetition.gateways.LoanReviewRepository;
 import co.com.pragma.model.loantype.gateways.LoanTypeRepository;
 import co.com.pragma.model.state.gateways.StateRepository;
-import co.com.pragma.model.userinfo.gateways.UserInfoRepository;
 import co.com.pragma.usecase.loanpetition.ListLoanReviewsUseCase;
 import co.com.pragma.usecase.loanpetition.LoanPetitionUseCase;
 import co.com.pragma.usecase.loantype.LoanTypeUseCase;

@@ -19,7 +19,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/v1/loan-types")
+@RequestMapping("/api/v1/loans/loan-types")
 @RequiredArgsConstructor
 @Tag(name = "Loan Types", description = "APIs for managing loan types")
 public class LoanTypeController {

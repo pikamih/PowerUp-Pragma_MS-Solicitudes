@@ -1,12 +1,14 @@
 server:
-  port: 8081
+  port: 8080
 spring:
   application:
     name: "MS_Solicitudes"
+  profiles:
+    active: "devkpika"
   r2dbc:
-    url: ${R2DBC_DB_LOAN}
-    username: "postgres"
-    password: "root"
+    url: ${SPRING_DATASOURCE_LOAN_URL}
+    username: "${SPRING_DATASOURCE_USERNAME}"
+    password: "${SPRING_DATASOURCE_PASSWORD}"
     pool:
       initial-size: 5
       max-size: 20
@@ -15,8 +17,8 @@ spring:
     allow-bean-definition-overriding: true
 security:
   jwt:
-    private-key-path: "${JWT_PRAGMA_PRIVATE_KEY_PATH}"
-    public-key-path: "${JWT_PRAGMA_PUBLIC_KEY_PATH}"
+    private-key-path: ${JWT_PRAGMA_PRIVATE_KEY}
+    public-key-path: ${JWT_PRAGMA_PUBLIC_KEY}
     expiration: 3600
 management:
   endpoints:
@@ -31,7 +33,7 @@ management:
     circuitbreakers:
       enabled: true
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8081"
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
 logging:
   level:
     org.springframework.web: "DEBUG"
@@ -77,5 +79,3 @@ resilience4j:
         waitDurationInOpenState: "10s"
 aws:
   region: "${AWS_REGION}"
-  secretKeyId: "${AWS_ACCESS_KEY_ID}"
-  secretAccessId: "${AWS_SECRET_ACCESS_KEY}"

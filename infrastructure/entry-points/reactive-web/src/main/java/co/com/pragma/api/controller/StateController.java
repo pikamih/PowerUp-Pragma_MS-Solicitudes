@@ -19,7 +19,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/v1/states")
+@RequestMapping("/api/v1/loans/states")
 @RequiredArgsConstructor
 @Tag(name = "States", description = "APIs for managing states")
 public class StateController {

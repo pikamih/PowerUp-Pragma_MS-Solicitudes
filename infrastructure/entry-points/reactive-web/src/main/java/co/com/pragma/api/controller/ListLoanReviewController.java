@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/loan-reviews")
+@RequestMapping("/api/v1/loans/loan-reviews")
 @RequiredArgsConstructor
 @Tag(name = "Loan Reviews", description = "APIs for reviewing loan petitions")
 public class ListLoanReviewController {

@@ -24,8 +24,8 @@ public class SecretsConfig {
   private AWSSecretsManagerConfig getConfig(String region) {
     return AWSSecretsManagerConfig.builder()
       .region(Region.of(region))
-      .cacheSize(5) // TODO Set cache size
-      .cacheSeconds(3600) // TODO Set cache seconds
+      .cacheSize(5)
+      .cacheSeconds(3600)
       .build();
   }
 }

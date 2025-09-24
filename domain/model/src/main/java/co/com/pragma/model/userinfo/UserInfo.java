@@ -2,7 +2,6 @@ package co.com.pragma.model.userinfo;
 import lombok.*;
 
 import java.math.BigDecimal;
-//import lombok.NoArgsConstructor;
 
 
 @Data

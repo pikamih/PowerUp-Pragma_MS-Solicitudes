@@ -21,7 +21,7 @@ public class UserInfoRestAdapter implements UserInfoRepository {
 
         return client
                 .get()
-                .uri("/api/v1/users/{id}", documentId)
+                .uri("/api/v1/auths/users/{id}", documentId)
                 .retrieve()
                 .bodyToMono(UserInfoResponse.class)
                 .map(this::toDomain);

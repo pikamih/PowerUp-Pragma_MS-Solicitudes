@@ -38,8 +38,6 @@ class SQSConfigTest {
         assertThat(sqsConfig.sqsListener(sqsAsyncClient, sqsProperties, message -> Mono.empty())).isNotNull();
     }
 
-
-
     @Test
     void resolveEndpointIsNull() {
         assertThat(sqsConfig.resolveEndpoint(sqsProperties)).isNull();

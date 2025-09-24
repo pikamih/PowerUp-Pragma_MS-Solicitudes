@@ -1,11 +1,9 @@
 package co.com.pragma.api.handler;
 
-import co.com.pragma.api.dto.request.LoanDecisionRequest;
 import co.com.pragma.api.dto.request.LoanPetitionRequestDto;
 import co.com.pragma.api.dto.response.LoanPetitionResponseDto;
 import co.com.pragma.api.mapper.LoanPetitionWebMapper;
 import co.com.pragma.jwt.JwtValidator;
-import co.com.pragma.model.loanpetition.LoanDecision;
 import co.com.pragma.usecase.common.messages.BusinessException;
 import co.com.pragma.usecase.common.messages.MessageCode;
 import co.com.pragma.usecase.loanpetition.LoanPetitionUseCase;

@@ -18,7 +18,7 @@ public class JwtValidator {
     private final PublicKey publicKey;
 
     public JwtValidator(@Value("${security.jwt.public-key-path}") String publicKeyPath) throws Exception {
-        this.publicKey = PemKeys.readPublicKey(publicKeyPath);
+        this.publicKey = PemKeys.readPublicKeyFromString(publicKeyPath);
     }
 
     public Mono<Claims> validateToken(String token) {

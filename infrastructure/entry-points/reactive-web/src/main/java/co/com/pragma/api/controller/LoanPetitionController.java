@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/loan-petitions")
+@RequestMapping("/api/v1/loans/loan-petitions")
 @RequiredArgsConstructor
 @Tag(name = "Loan Petitions", description = "APIs for managing loan petitions")
 public class LoanPetitionController {

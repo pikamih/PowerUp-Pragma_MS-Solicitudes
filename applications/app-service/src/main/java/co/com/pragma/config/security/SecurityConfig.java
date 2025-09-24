@@ -31,11 +31,12 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/webjars/**"
                         ).permitAll()
+                        .pathMatchers("/actuator/health").permitAll()
                         // endpoints de solicitudes
-                        .pathMatchers(HttpMethod.GET, "/api/v1/states/**").hasAnyRole("ADMIN")
-                        .pathMatchers(HttpMethod.GET, "/api/v1/loan-types/**").hasAnyRole("ADMIN")
-                        .pathMatchers("/api/v1/loan-petitions/**").hasAnyRole("ADMIN", "CLIENTE", "ASESOR")
-                        .pathMatchers("/api/v1/loan-reviews/**").hasAnyRole("ASESOR")
+                        .pathMatchers(HttpMethod.GET, "/api/v1/loans/states/**").hasAnyRole("ADMIN")
+                        .pathMatchers(HttpMethod.GET, "/api/v1/loans/loan-types/**").hasAnyRole("ADMIN")
+                        .pathMatchers("/api/v1/loans/loan-petitions/**").hasAnyRole("ADMIN", "CLIENTE", "ASESOR")
+                        .pathMatchers("/api/v1/loans/loan-reviews/**").hasAnyRole("ASESOR")
                         // cualquier otra ruta requiere autenticación
                         .anyExchange().authenticated()
                 )

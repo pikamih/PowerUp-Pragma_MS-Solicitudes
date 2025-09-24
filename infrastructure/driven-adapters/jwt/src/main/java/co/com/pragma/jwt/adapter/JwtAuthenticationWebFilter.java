@@ -26,7 +26,7 @@ public class JwtAuthenticationWebFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, org.springframework.web.server.WebFilterChain chain) {
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        log.info("[JwtAuthenticationWebFilter] AUTH HEADER RECIBIDO: {}", authHeader);
+        log.info("[JwtAuthenticationWebFilter] AUTH HEADER RECIBIDO");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
@@ -45,7 +45,6 @@ public class JwtAuthenticationWebFilter implements WebFilter {
                                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
                     })
                     .onErrorResume(e -> { // token inválido
-                        log.error("[JwtAuthenticationWebFilter] ERROR al validar token: {}", e.getMessage(), e);
                         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                         log.warn("[JwtAuthenticationWebFilter] No se encontró Authorization header");
                         return exchange.getResponse().setComplete();
