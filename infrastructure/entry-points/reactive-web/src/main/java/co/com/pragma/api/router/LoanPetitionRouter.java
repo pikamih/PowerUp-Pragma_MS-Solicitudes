@@ -14,10 +14,10 @@ public class LoanPetitionRouter {
 
     @Bean
     public RouterFunction<ServerResponse> loanPetitionRoutes(LoanPetitionHandler handler) {
-        return route(POST("/api/v1/loan-petitions"), handler::createLoanPetition)
-                .andRoute(GET("/api/v1/loan-petitions/{id}"), handler::findByIdLoanPetition)
-                .andRoute(GET("/api/v1/loan-petitions"), handler::listAllLoanPetition)
-                .andRoute(PUT("/api/v1/loan-petitions/{id}"), handler::updateLoanPetition)
-                .andRoute(DELETE("/api/v1/loan-petitions/{id}"), handler::deleteLoanPetition);
+        return route(POST("/api/v1/loans/loan-petitions"), handler::createLoanPetition)
+                .andRoute(GET("/api/v1/loans/loan-petitions/{id}"), handler::findByIdLoanPetition)
+                .andRoute(GET("/api/v1/loans/loan-petitions"), handler::listAllLoanPetition)
+                .andRoute(PUT("/api/v1/loans/loan-petitions/{id}"), handler::updateLoanPetition)
+                .andRoute(DELETE("/api/v1/loans/loan-petitions/{id}"), handler::deleteLoanPetition);
     }
 }

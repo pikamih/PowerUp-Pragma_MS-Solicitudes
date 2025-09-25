@@ -14,10 +14,10 @@ public class StateRouter {
 
     @Bean
     public RouterFunction<ServerResponse> stateRoutes(StateHandler handler) {
-        return route(POST("/api/v1/states"), handler::createState)
-                .andRoute(GET("/api/v1/states/{id}"), handler::getStateById)
-                .andRoute(GET("/api/v1/states"), handler::listState)
-                .andRoute(PUT("/api/v1/states/{id}"), handler::updateState)
-                .andRoute(DELETE("/api/v1/states/{id}"), handler::deleteState);
+        return route(POST("/api/v1/loans/states"), handler::createState)
+                .andRoute(GET("/api/v1/loans/states/{id}"), handler::getStateById)
+                .andRoute(GET("/api/v1/loans/states"), handler::listState)
+                .andRoute(PUT("/api/v1/loans/states/{id}"), handler::updateState)
+                .andRoute(DELETE("/api/v1/loans/states/{id}"), handler::deleteState);
     }
 }

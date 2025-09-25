@@ -14,6 +14,6 @@ public class ListLoanReviewRouter {
 
     @Bean
     public RouterFunction<ServerResponse> loanReviewRoutes(ListLoanReviewHandler handler) {
-        return route(GET("/api/v1/loan-reviews"), handler::listLoanReviews);
+        return route(GET("/api/loans/v1/loan-reviews"), handler::listLoanReviews);
     }
 }

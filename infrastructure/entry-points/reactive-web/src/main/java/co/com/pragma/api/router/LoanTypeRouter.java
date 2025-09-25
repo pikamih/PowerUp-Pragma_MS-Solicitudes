@@ -14,10 +14,10 @@ public class LoanTypeRouter {
 
     @Bean
     public RouterFunction<ServerResponse> loanTypeRoutes(LoanTypeHandler handler) {
-        return route(POST("/api/v1/loan-types"), handler::createLoanType)
-                .andRoute(GET("/api/v1/loan-types"), handler::listLoanTypes)
-                .andRoute(GET("/api/v1/loan-types/{id}"), handler::getLoanTypeById)
-                .andRoute(PUT("/api/v1/loan-types/{id}"), handler::updateLoanType)
-                .andRoute(DELETE("/api/v1/loan-types/{id}"), handler::deleteLoanType);
+        return route(POST("/api/v1/loans/loan-types"), handler::createLoanType)
+                .andRoute(GET("/api/v1/loans/loan-types"), handler::listLoanTypes)
+                .andRoute(GET("/api/v1/loans/loan-types/{id}"), handler::getLoanTypeById)
+                .andRoute(PUT("/api/v1/loans/loan-types/{id}"), handler::updateLoanType)
+                .andRoute(DELETE("/api/v1/loans/loan-types/{id}"), handler::deleteLoanType);
     }
 }
